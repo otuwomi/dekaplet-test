@@ -117,6 +117,62 @@ function AppRoutes() {
             </ProtectedRoute>
           } 
         />
+        <Route 
+          path="/dashboard/wallets" 
+          element={
+            <ProtectedRoute>
+              <Wallets />
+            </ProtectedRoute>
+          } 
+        />
+        <Route 
+          path="/dashboard/transactions" 
+          element={
+            <ProtectedRoute>
+              <Transactions />
+            </ProtectedRoute>
+          } 
+        />
+        <Route 
+          path="/dashboard/cashpoint" 
+          element={
+            <ProtectedRoute>
+              <Cashpoint />
+            </ProtectedRoute>
+          } 
+        />
+        <Route 
+          path="/dashboard/compliance" 
+          element={
+            <ProtectedRoute>
+              <Compliance />
+            </ProtectedRoute>
+          } 
+        />
+        <Route 
+          path="/dashboard/referrals" 
+          element={
+            <ProtectedRoute>
+              <Referrals />
+            </ProtectedRoute>
+          } 
+        />
+        <Route 
+          path="/dashboard/support" 
+          element={
+            <ProtectedRoute>
+              <Support />
+            </ProtectedRoute>
+          } 
+        />
+        <Route 
+          path="/dashboard/settings" 
+          element={
+            <ProtectedRoute>
+              <Settings />
+            </ProtectedRoute>
+          } 
+        />
 
         {/* Admin routes */}
         <Route 
@@ -132,6 +188,54 @@ function AppRoutes() {
           element={
             <AdminRoute>
               <UsersManagement />
+            </AdminRoute>
+          } 
+        />
+        <Route 
+          path="/admin/transactions" 
+          element={
+            <AdminRoute>
+              <AdminTransactions />
+            </AdminRoute>
+          } 
+        />
+        <Route 
+          path="/admin/withdrawals" 
+          element={
+            <AdminRoute>
+              <AdminWithdrawals />
+            </AdminRoute>
+          } 
+        />
+        <Route 
+          path="/admin/kyc" 
+          element={
+            <AdminRoute>
+              <AdminKyc />
+            </AdminRoute>
+          } 
+        />
+        <Route 
+          path="/admin/contacts" 
+          element={
+            <AdminRoute>
+              <AdminContacts />
+            </AdminRoute>
+          } 
+        />
+        <Route 
+          path="/admin/support" 
+          element={
+            <AdminRoute>
+              <AdminSupport />
+            </AdminRoute>
+          } 
+        />
+        <Route 
+          path="/admin/settings" 
+          element={
+            <AdminRoute>
+              <AdminSettings />
             </AdminRoute>
           } 
         />
