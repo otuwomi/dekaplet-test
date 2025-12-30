@@ -17,6 +17,8 @@ import Terms from "./pages/Terms";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
 import DashboardHome from "./pages/Dashboard";
+import AdminDashboard from "./pages/admin/AdminDashboard";
+import UsersManagement from "./pages/admin/UsersManagement";
 
 // Protected Route Component
 const ProtectedRoute = ({ children }) => {
@@ -31,6 +33,29 @@ const ProtectedRoute = ({ children }) => {
   }
   
   return isAuthenticated ? children : <Navigate to="/login" />;
+};
+
+// Admin Route Component
+const AdminRoute = ({ children }) => {
+  const { isAuthenticated, user, loading } = useAuth();
+  
+  if (loading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-black">
+        <div className="text-[var(--brand-primary)] text-xl">Loading...</div>
+      </div>
+    );
+  }
+  
+  if (!isAuthenticated) {
+    return <Navigate to="/login" />;
+  }
+  
+  if (user?.role !== 'admin') {
+    return <Navigate to="/dashboard" />;
+  }
+  
+  return children;
 };
 
 function AppRoutes() {
@@ -70,11 +95,29 @@ function AppRoutes() {
         
         {/* Protected dashboard routes (no header/footer) */}
         <Route 
-          path="/dashboard/*" 
+          path="/dashboard" 
           element={
             <ProtectedRoute>
               <DashboardHome />
             </ProtectedRoute>
+          } 
+        />
+
+        {/* Admin routes */}
+        <Route 
+          path="/admin" 
+          element={
+            <AdminRoute>
+              <AdminDashboard />
+            </AdminRoute>
+          } 
+        />
+        <Route 
+          path="/admin/users" 
+          element={
+            <AdminRoute>
+              <UsersManagement />
+            </AdminRoute>
           } 
         />
       </Routes>
