@@ -12,6 +12,11 @@ use App\Http\Controllers\Api\User\WithdrawalController;
 use App\Http\Controllers\Api\User\KycController;
 use App\Http\Controllers\Api\User\ReferralController;
 use App\Http\Controllers\Api\User\SupportTicketController;
+use App\Http\Controllers\Api\Admin\AdminDashboardController;
+use App\Http\Controllers\Api\Admin\UserManagementController;
+use App\Http\Controllers\Api\Admin\TransactionManagementController;
+use App\Http\Controllers\Api\Admin\KycManagementController;
+use App\Http\Controllers\Api\Admin\WithdrawalManagementController;
 
 // Health check endpoint
 Route::get('/health', function () {
@@ -74,22 +79,52 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::get('/support-tickets/{id}', [SupportTicketController::class, 'show']);
         Route::post('/support-tickets/{id}/close', [SupportTicketController::class, 'close']);
     });
+
+    // Admin Routes (Protected with admin middleware)
+    Route::middleware('admin')->prefix('admin')->group(function () {
+        // Dashboard
+        Route::get('/dashboard', [AdminDashboardController::class, 'index']);
+        
+        // User Management
+        Route::get('/users', [UserManagementController::class, 'index']);
+        Route::get('/users/statistics', [UserManagementController::class, 'statistics']);
+        Route::get('/users/{id}', [UserManagementController::class, 'show']);
+        Route::put('/users/{id}', [UserManagementController::class, 'update']);
+        Route::post('/users/{id}/suspend', [UserManagementController::class, 'suspend']);
+        Route::delete('/users/{id}', [UserManagementController::class, 'destroy']);
+        
+        // Transaction Management
+        Route::get('/transactions', [TransactionManagementController::class, 'index']);
+        Route::get('/transactions/statistics', [TransactionManagementController::class, 'statistics']);
+        Route::get('/transactions/{id}', [TransactionManagementController::class, 'show']);
+        Route::put('/transactions/{id}/status', [TransactionManagementController::class, 'updateStatus']);
+        
+        // KYC Management
+        Route::get('/kyc', [KycManagementController::class, 'index']);
+        Route::get('/kyc/statistics', [KycManagementController::class, 'statistics']);
+        Route::get('/kyc/{id}', [KycManagementController::class, 'show']);
+        Route::post('/kyc/{id}/approve', [KycManagementController::class, 'approve']);
+        Route::post('/kyc/{id}/reject', [KycManagementController::class, 'reject']);
+        
+        // Withdrawal Management
+        Route::get('/withdrawals', [WithdrawalManagementController::class, 'index']);
+        Route::get('/withdrawals/statistics', [WithdrawalManagementController::class, 'statistics']);
+        Route::get('/withdrawals/{id}', [WithdrawalManagementController::class, 'show']);
+        Route::post('/withdrawals/{id}/approve', [WithdrawalManagementController::class, 'approve']);
+        Route::post('/withdrawals/{id}/reject', [WithdrawalManagementController::class, 'reject']);
+        
+        // Contact Forms
+        Route::get('/contacts', [ContactFormController::class, 'index']);
+        Route::get('/contacts/{id}', [ContactFormController::class, 'show']);
+        Route::put('/contacts/{id}', [ContactFormController::class, 'update']);
+        
+        // Newsletters
+        Route::get('/newsletters', [NewsletterController::class, 'index']);
+    });
 });
 
 // Contact form routes
 Route::post('/contact', [ContactFormController::class, 'store']);
 
-// Protected contact form routes (admin)
-Route::middleware('auth:sanctum')->group(function () {
-    Route::get('/contact', [ContactFormController::class, 'index']);
-    Route::get('/contact/{id}', [ContactFormController::class, 'show']);
-    Route::put('/contact/{id}', [ContactFormController::class, 'update']);
-});
-
 // Newsletter routes
 Route::post('/newsletter', [NewsletterController::class, 'store']);
-
-// Protected newsletter routes (admin)
-Route::middleware('auth:sanctum')->group(function () {
-    Route::get('/newsletter', [NewsletterController::class, 'index']);
-});
