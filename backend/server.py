@@ -97,6 +97,90 @@ async def get_status_checks():
     
     return status_checks
 
+# Contact Form Endpoint
+@api_router.post("/contact", response_model=ContactForm)
+async def submit_contact_form(contact_data: ContactFormCreate):
+    """
+    Submit a contact form inquiry
+    """
+    try:
+        contact_dict = contact_data.model_dump()
+        contact_obj = ContactForm(**contact_dict)
+        
+        # Convert to dict and serialize datetime to ISO string for MongoDB
+        doc = contact_obj.model_dump()
+        doc['created_at'] = doc['created_at'].isoformat()
+        
+        # Save to database
+        await db.contact_forms.insert_one(doc)
+        
+        # In production, you would send an email notification here
+        logger.info(f"New contact form submission from {contact_obj.email}")
+        
+        return contact_obj
+    except Exception as e:
+        logger.error(f"Error submitting contact form: {e}")
+        raise HTTPException(status_code=500, detail="Failed to submit contact form")
+
+# Get all contact forms (admin endpoint)
+@api_router.get("/contact", response_model=List[ContactForm])
+async def get_contact_forms(skip: int = 0, limit: int = 50):
+    """
+    Retrieve all contact form submissions (admin use)
+    """
+    try:
+        contact_forms = await db.contact_forms.find({}, {"_id": 0}).sort("created_at", -1).skip(skip).limit(limit).to_list(limit)
+        
+        # Convert ISO string timestamps back to datetime objects
+        for form in contact_forms:
+            if isinstance(form['created_at'], str):
+                form['created_at'] = datetime.fromisoformat(form['created_at'])
+        
+        return contact_forms
+    except Exception as e:
+        logger.error(f"Error retrieving contact forms: {e}")
+        raise HTTPException(status_code=500, detail="Failed to retrieve contact forms")
+
+# Newsletter subscription endpoint
+@api_router.post("/newsletter", response_model=Newsletter)
+async def subscribe_newsletter(newsletter_data: NewsletterCreate):
+    """
+    Subscribe to newsletter
+    """
+    try:
+        # Check if email already exists
+        existing = await db.newsletters.find_one({"email": newsletter_data.email})
+        if existing:
+            raise HTTPException(status_code=400, detail="Email already subscribed")
+        
+        newsletter_obj = Newsletter(**newsletter_data.model_dump())
+        
+        # Convert to dict and serialize datetime to ISO string for MongoDB
+        doc = newsletter_obj.model_dump()
+        doc['subscribed_at'] = doc['subscribed_at'].isoformat()
+        
+        await db.newsletters.insert_one(doc)
+        
+        logger.info(f"New newsletter subscription: {newsletter_obj.email}")
+        return newsletter_obj
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"Error subscribing to newsletter: {e}")
+        raise HTTPException(status_code=500, detail="Failed to subscribe to newsletter")
+
+# Health check endpoint
+@api_router.get("/health")
+async def health_check():
+    """
+    Health check endpoint for monitoring
+    """
+    return {
+        "status": "healthy",
+        "timestamp": datetime.now(timezone.utc),
+        "service": "Dekaplet API"
+    }
+
 # Include the router in the main app
 app.include_router(api_router)
 
