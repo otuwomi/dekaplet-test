@@ -17,8 +17,23 @@ import Terms from "./pages/Terms";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
 import DashboardHome from "./pages/Dashboard";
+// User Dashboard Pages
+import Wallets from "./pages/dashboard/Wallets";
+import Transactions from "./pages/dashboard/Transactions";
+import Cashpoint from "./pages/dashboard/Cashpoint";
+import Compliance from "./pages/dashboard/Compliance";
+import Referrals from "./pages/dashboard/Referrals";
+import Support from "./pages/dashboard/Support";
+import Settings from "./pages/dashboard/Settings";
+// Admin Dashboard Pages
 import AdminDashboard from "./pages/admin/AdminDashboard";
 import UsersManagement from "./pages/admin/UsersManagement";
+import AdminTransactions from "./pages/admin/TransactionsManagement";
+import AdminWithdrawals from "./pages/admin/WithdrawalsManagement";
+import AdminKyc from "./pages/admin/KycManagement";
+import AdminContacts from "./pages/admin/ContactsManagement";
+import AdminSupport from "./pages/admin/SupportManagement";
+import AdminSettings from "./pages/admin/AdminSettings";
 
 // Protected Route Component
 const ProtectedRoute = ({ children }) => {
