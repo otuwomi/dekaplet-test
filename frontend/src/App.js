@@ -16,7 +16,7 @@ import Privacy from "./pages/Privacy";
 import Terms from "./pages/Terms";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
-import Dashboard from "./pages/Dashboard";
+import DashboardHome from "./pages/Dashboard";
 
 // Protected Route Component
 const ProtectedRoute = ({ children }) => {
@@ -36,29 +36,48 @@ const ProtectedRoute = ({ children }) => {
 function AppRoutes() {
   return (
     <>
-      <Header />
       <Routes>
-        <Route path="/" element={<Home />} />
-        <Route path="/how-it-works" element={<HowItWorks />} />
-        <Route path="/features" element={<Features />} />
-        <Route path="/developers" element={<Developers />} />
-        <Route path="/pricing" element={<Pricing />} />
-        <Route path="/about" element={<About />} />
-        <Route path="/contact" element={<Contact />} />
-        <Route path="/privacy" element={<Privacy />} />
-        <Route path="/terms" element={<Terms />} />
+        {/* Public routes with header/footer */}
+        <Route path="/" element={
+          <><Header /><Home /><Footer /></>
+        } />
+        <Route path="/how-it-works" element={
+          <><Header /><HowItWorks /><Footer /></>
+        } />
+        <Route path="/features" element={
+          <><Header /><Features /><Footer /></>
+        } />
+        <Route path="/developers" element={
+          <><Header /><Developers /><Footer /></>
+        } />
+        <Route path="/pricing" element={
+          <><Header /><Pricing /><Footer /></>
+        } />
+        <Route path="/about" element={
+          <><Header /><About /><Footer /></>
+        } />
+        <Route path="/contact" element={
+          <><Header /><Contact /><Footer /></>
+        } />
+        <Route path="/privacy" element={
+          <><Header /><Privacy /><Footer /></>
+        } />
+        <Route path="/terms" element={
+          <><Header /><Terms /><Footer /></>
+        } />
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
+        
+        {/* Protected dashboard routes (no header/footer) */}
         <Route 
-          path="/dashboard" 
+          path="/dashboard/*" 
           element={
             <ProtectedRoute>
-              <Dashboard />
+              <DashboardHome />
             </ProtectedRoute>
           } 
         />
       </Routes>
-      <Footer />
       <Toaster position="top-right" />
     </>
   );
