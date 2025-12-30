@@ -51,7 +51,7 @@ class AdminUserSeeder extends Seeder
             ]);
         }
 
-        echo "✓ Created {$currencies} wallets for test user\n";
+        echo "✓ Created " . count($currencies) . " wallets for test user\n";
 
         // Create some test transactions
         $types = ['deposit', 'withdrawal', 'payment'];
