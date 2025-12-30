@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import AdminLayout from '../components/AdminLayout';
+import AdminLayout from '../../components/AdminLayout';
 import { Users, ArrowLeftRight, Download, Shield, HelpCircle, Mail } from 'lucide-react';
 import axios from 'axios';
 import { toast } from 'sonner';
