@@ -101,3 +101,90 @@
 #====================================================================================================
 # Testing Data - Main Agent and testing sub agent both should log testing data below this section
 #====================================================================================================
+
+user_problem_statement: "Test the Dekaplet backend APIs including health check, contact form, newsletter subscription, and root endpoint"
+
+backend:
+  - task: "Health Check API"
+    implemented: true
+    working: true
+    file: "/app/backend/server.py"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: false
+    status_history:
+      - working: true
+        agent: "testing"
+        comment: "GET /api/health endpoint tested successfully. Returns status 'healthy' with timestamp and service name."
+
+  - task: "Root Endpoint API"
+    implemented: true
+    working: true
+    file: "/app/backend/server.py"
+    stuck_count: 0
+    priority: "medium"
+    needs_retesting: false
+    status_history:
+      - working: true
+        agent: "testing"
+        comment: "GET /api/ endpoint tested successfully. Returns message 'Dekaplet API - Powering Crypto Payments'."
+
+  - task: "Contact Form Submission API"
+    implemented: true
+    working: true
+    file: "/app/backend/server.py"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: false
+    status_history:
+      - working: true
+        agent: "testing"
+        comment: "POST /api/contact endpoint tested successfully. Accepts contact form data, saves to MongoDB, returns all required fields including generated ID and timestamp."
+
+  - task: "Get Contact Forms API"
+    implemented: true
+    working: true
+    file: "/app/backend/server.py"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: false
+    status_history:
+      - working: true
+        agent: "testing"
+        comment: "GET /api/contact endpoint tested successfully. Returns list of contact form submissions. Verified submitted contact appears in the list."
+
+  - task: "Newsletter Subscription API"
+    implemented: true
+    working: true
+    file: "/app/backend/server.py"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: false
+    status_history:
+      - working: true
+        agent: "testing"
+        comment: "POST /api/newsletter endpoint tested successfully. Accepts email subscription, saves to MongoDB, prevents duplicate subscriptions with proper 400 error response."
+
+frontend:
+  # No frontend testing performed as per instructions
+
+metadata:
+  created_by: "testing_agent"
+  version: "1.0"
+  test_sequence: 1
+  run_ui: false
+
+test_plan:
+  current_focus:
+    - "Health Check API"
+    - "Contact Form Submission API"
+    - "Get Contact Forms API"
+    - "Newsletter Subscription API"
+    - "Root Endpoint API"
+  stuck_tasks: []
+  test_all: false
+  test_priority: "high_first"
+
+agent_communication:
+  - agent: "testing"
+    message: "Completed comprehensive backend API testing for Dekaplet. All 5 backend endpoints tested successfully: health check, root endpoint, contact form submission/retrieval, and newsletter subscription with duplicate prevention. Created backend_test.py for automated testing. All APIs are working correctly with proper data validation, MongoDB persistence, and error handling."
