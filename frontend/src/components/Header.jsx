@@ -1,10 +1,15 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Menu, X } from 'lucide-react';
-import { Button } from './ui/button';
+import { useAuth } from '../contexts/AuthContext';
 
 const Header = () => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const { isAuthenticated, user, logout } = useAuth();
+
+  const handleLogout = async () => {
+    await logout();
+  };
 
   return (
     <>
@@ -20,9 +25,16 @@ const Header = () => {
           <Link to="/developers" className="dark-nav-link">For Developers</Link>
           <Link to="/pricing" className="dark-nav-link">Pricing</Link>
           <Link to="/about" className="dark-nav-link">About Us</Link>
-          <Link to="/contact">
-            <button className="btn-primary">Get Started</button>
-          </Link>
+          {isAuthenticated ? (
+            <>
+              <Link to="/dashboard" className="dark-nav-link">Dashboard</Link>
+              <button onClick={handleLogout} className="btn-primary">Logout</button>
+            </>
+          ) : (
+            <Link to="/login">
+              <button className="btn-primary">Login</button>
+            </Link>
+          )}
         </nav>
 
         <button 
