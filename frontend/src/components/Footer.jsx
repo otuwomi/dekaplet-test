@@ -1,73 +1,208 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { Twitter, Linkedin, Github, Mail } from 'lucide-react';
+import { 
+  Twitter, 
+  Github, 
+  Linkedin, 
+  Instagram,
+  Mail,
+  MapPin,
+  Phone,
+  ArrowUpRight
+} from 'lucide-react';
 
 const Footer = () => {
+  const currentYear = new Date().getFullYear();
+
+  const footerLinks = {
+    product: [
+      { label: 'Features', path: '/features' },
+      { label: 'Pricing', path: '/pricing' },
+      { label: 'How It Works', path: '/how-it-works' },
+      { label: 'For Developers', path: '/developers' },
+    ],
+    company: [
+      { label: 'About Us', path: '/about' },
+      { label: 'Contact', path: '/contact' },
+      { label: 'Careers', path: '/careers', external: true },
+      { label: 'Blog', path: '/blog', external: true },
+    ],
+    legal: [
+      { label: 'Privacy Policy', path: '/privacy' },
+      { label: 'Terms of Service', path: '/terms' },
+      { label: 'Cookie Policy', path: '/cookies' },
+      { label: 'Compliance', path: '/compliance' },
+    ],
+  };
+
+  const socialLinks = [
+    { icon: Twitter, href: 'https://twitter.com', label: 'Twitter' },
+    { icon: Github, href: 'https://github.com', label: 'GitHub' },
+    { icon: Linkedin, href: 'https://linkedin.com', label: 'LinkedIn' },
+    { icon: Instagram, href: 'https://instagram.com', label: 'Instagram' },
+  ];
+
   return (
-    <footer className="bg-black border-t border-[var(--border-subtle)] py-16 px-[7.6923%]">
-      <div className="max-w-7xl mx-auto">
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-12 mb-12">
-          {/* Company Info */}
-          <div>
-            <h3 className="text-[var(--brand-primary)] text-2xl font-bold mb-4">Dekaplet</h3>
-            <p className="text-[var(--text-secondary)] mb-4">
-              Infrastructure for the Future of Payments
+    <footer 
+      className="relative pt-16 pb-8"
+      style={{ 
+        background: 'var(--bg-secondary)',
+        borderTop: '1px solid var(--border-primary)'
+      }}
+    >
+      <div className="container mx-auto px-4 lg:px-8">
+        {/* Main Footer Content */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-12 mb-12">
+          {/* Brand Column */}
+          <div className="lg:col-span-2">
+            <Link to="/" className="flex items-center gap-2 mb-4">
+              <div 
+                className="w-10 h-10 rounded-xl flex items-center justify-center"
+                style={{ background: 'var(--brand-gradient)' }}
+              >
+                <span className="text-white font-bold text-lg">D</span>
+              </div>
+              <span 
+                className="text-xl font-bold"
+                style={{ color: 'var(--text-primary)' }}
+              >
+                Dekaplet
+              </span>
+            </Link>
+            <p 
+              className="text-sm mb-6 max-w-sm"
+              style={{ color: 'var(--text-secondary)' }}
+            >
+              The modern platform for cryptocurrency payments and wallets. 
+              Accept, store, and settle cryptocurrency seamlessly with enterprise-grade infrastructure.
             </p>
-            <div className="flex gap-4">
-              <a href="#" className="text-[var(--text-muted)] hover:text-[var(--brand-primary)] transition-colors">
-                <Twitter size={20} />
+            
+            {/* Contact Info */}
+            <div className="space-y-3">
+              <a 
+                href="mailto:hello@dekaplet.com"
+                className="flex items-center gap-2 text-sm transition-colors hover:text-[var(--brand-primary)]"
+                style={{ color: 'var(--text-secondary)' }}
+              >
+                <Mail size={16} />
+                hello@dekaplet.com
               </a>
-              <a href="#" className="text-[var(--text-muted)] hover:text-[var(--brand-primary)] transition-colors">
-                <Linkedin size={20} />
-              </a>
-              <a href="#" className="text-[var(--text-muted)] hover:text-[var(--brand-primary)] transition-colors">
-                <Github size={20} />
-              </a>
-              <a href="#" className="text-[var(--text-muted)] hover:text-[var(--brand-primary)] transition-colors">
-                <Mail size={20} />
-              </a>
+              <div 
+                className="flex items-center gap-2 text-sm"
+                style={{ color: 'var(--text-secondary)' }}
+              >
+                <MapPin size={16} />
+                San Francisco, CA
+              </div>
             </div>
           </div>
 
-          {/* Product */}
+          {/* Product Links */}
           <div>
-            <h4 className="text-white font-semibold mb-4">Product</h4>
-            <ul className="space-y-2">
-              <li><Link to="/features" className="text-[var(--text-muted)] hover:text-white transition-colors">Features</Link></li>
-              <li><Link to="/pricing" className="text-[var(--text-muted)] hover:text-white transition-colors">Pricing</Link></li>
-              <li><Link to="/how-it-works" className="text-[var(--text-muted)] hover:text-white transition-colors">How It Works</Link></li>
-              <li><Link to="/developers" className="text-[var(--text-muted)] hover:text-white transition-colors">API Documentation</Link></li>
+            <h4 
+              className="font-semibold mb-4"
+              style={{ color: 'var(--text-primary)' }}
+            >
+              Product
+            </h4>
+            <ul className="space-y-3">
+              {footerLinks.product.map((link) => (
+                <li key={link.path}>
+                  <Link
+                    to={link.path}
+                    className="text-sm transition-colors hover:text-[var(--brand-primary)] flex items-center gap-1"
+                    style={{ color: 'var(--text-secondary)' }}
+                  >
+                    {link.label}
+                    {link.external && <ArrowUpRight size={12} />}
+                  </Link>
+                </li>
+              ))}
             </ul>
           </div>
 
-          {/* Company */}
+          {/* Company Links */}
           <div>
-            <h4 className="text-white font-semibold mb-4">Company</h4>
-            <ul className="space-y-2">
-              <li><Link to="/about" className="text-[var(--text-muted)] hover:text-white transition-colors">About Us</Link></li>
-              <li><Link to="/contact" className="text-[var(--text-muted)] hover:text-white transition-colors">Contact</Link></li>
-              <li><a href="#" className="text-[var(--text-muted)] hover:text-white transition-colors">Careers</a></li>
-              <li><a href="#" className="text-[var(--text-muted)] hover:text-white transition-colors">Blog</a></li>
+            <h4 
+              className="font-semibold mb-4"
+              style={{ color: 'var(--text-primary)' }}
+            >
+              Company
+            </h4>
+            <ul className="space-y-3">
+              {footerLinks.company.map((link) => (
+                <li key={link.path}>
+                  <Link
+                    to={link.path}
+                    className="text-sm transition-colors hover:text-[var(--brand-primary)] flex items-center gap-1"
+                    style={{ color: 'var(--text-secondary)' }}
+                  >
+                    {link.label}
+                    {link.external && <ArrowUpRight size={12} />}
+                  </Link>
+                </li>
+              ))}
             </ul>
           </div>
 
-          {/* Legal */}
+          {/* Legal Links */}
           <div>
-            <h4 className="text-white font-semibold mb-4">Legal</h4>
-            <ul className="space-y-2">
-              <li><Link to="/privacy" className="text-[var(--text-muted)] hover:text-white transition-colors">Privacy Policy</Link></li>
-              <li><Link to="/terms" className="text-[var(--text-muted)] hover:text-white transition-colors">Terms of Service</Link></li>
-              <li><a href="#" className="text-[var(--text-muted)] hover:text-white transition-colors">Cookie Policy</a></li>
-              <li><a href="#" className="text-[var(--text-muted)] hover:text-white transition-colors">Compliance</a></li>
+            <h4 
+              className="font-semibold mb-4"
+              style={{ color: 'var(--text-primary)' }}
+            >
+              Legal
+            </h4>
+            <ul className="space-y-3">
+              {footerLinks.legal.map((link) => (
+                <li key={link.path}>
+                  <Link
+                    to={link.path}
+                    className="text-sm transition-colors hover:text-[var(--brand-primary)]"
+                    style={{ color: 'var(--text-secondary)' }}
+                  >
+                    {link.label}
+                  </Link>
+                </li>
+              ))}
             </ul>
           </div>
         </div>
 
         {/* Bottom Bar */}
-        <div className="pt-8 border-t border-[var(--border-subtle)] text-center">
-          <p className="text-[var(--text-muted)]">
-            © {new Date().getFullYear()} Dekaplet. All rights reserved. Powering Crypto Payments and Wallets.
+        <div 
+          className="pt-8 flex flex-col md:flex-row items-center justify-between gap-4"
+          style={{ borderTop: '1px solid var(--border-primary)' }}
+        >
+          <p 
+            className="text-sm"
+            style={{ color: 'var(--text-muted)' }}
+          >
+            © {currentYear} Dekaplet. All rights reserved.
           </p>
+
+          {/* Social Links */}
+          <div className="flex items-center gap-2">
+            {socialLinks.map((social) => {
+              const Icon = social.icon;
+              return (
+                <a
+                  key={social.label}
+                  href={social.href}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="p-2.5 rounded-xl transition-all duration-200 hover:scale-110"
+                  style={{ 
+                    background: 'var(--bg-tertiary)',
+                    color: 'var(--text-secondary)'
+                  }}
+                  aria-label={social.label}
+                >
+                  <Icon size={18} />
+                </a>
+              );
+            })}
+          </div>
         </div>
       </div>
     </footer>
