@@ -1,235 +1,129 @@
-# Deploying Dekaplet to Shared Hosting
+# Dekaplet - Shared Hosting Deployment Guide
 
-## Prerequisites
+This guide explains how to deploy Dekaplet on shared hosting that doesn't support `npm run build`.
 
-**Shared Hosting Requirements:**
-- PHP 8.2 or higher
-- MySQL/MariaDB database
-- SSH access (optional but recommended)
-- Composer support
-- Node.js (for building React)
-- Custom domain or subdomain
+## Pre-Deployment Checklist
 
-**Important Note:** Shared hosting has limitations. For production fintech apps, consider VPS/cloud hosting for better security, performance, and control.
+Since shared hosting doesn't support Node.js build commands, you'll need to:
+1. Build the frontend locally
+2. Upload pre-built files
 
 ---
 
-## Step 1: Prepare Your Application
+## Step 1: Build Frontend Locally
 
-### A. Build React Frontend for Production
-
-On your local machine or development server:
+On your local machine or development environment:
 
 ```bash
-# Navigate to frontend directory
 cd /app/frontend
-
-# Install dependencies (if not already done)
 yarn install
-
-# Build for production
 yarn build
 ```
 
-This creates a `/app/frontend/build` directory with optimized static files.
+This creates a `build/` folder with all static files.
 
-### B. Prepare Laravel Backend
+---
 
-```bash
-# Navigate to backend directory
-cd /app/backend
+## Step 2: Directory Structure for Shared Hosting
 
-# Install production dependencies
-composer install --optimize-autoloader --no-dev
-
-# Clear and optimize
-php artisan config:clear
-php artisan cache:clear
-php artisan route:clear
-php artisan view:clear
-php artisan optimize
+```
+your-domain.com/
+├── public_html/                    # Web root (frontend)
+│   ├── index.html
+│   ├── static/
+│   │   ├── css/
+│   │   ├── js/
+│   │   └── media/
+│   ├── favicon.ico
+│   ├── manifest.json
+│   └── .htaccess                   # For React routing
+│
+├── api/                            # Laravel backend
+│   ├── app/
+│   ├── bootstrap/
+│   ├── config/
+│   ├── database/
+│   ├── public/
+│   │   └── index.php               # Entry point
+│   ├── routes/
+│   ├── storage/
+│   ├── vendor/
+│   ├── .env
+│   └── artisan
 ```
 
 ---
 
-## Step 2: Database Setup on Shared Hosting
+## Step 3: Upload Frontend Files
 
-### Create MySQL Database
-
-1. **Login to cPanel** (or your hosting control panel)
-2. **Go to MySQL Databases**
-3. **Create a new database:**
-   - Database name: `dekaplet_db` (or your preferred name)
-4. **Create a database user:**
-   - Username: `dekaplet_user`
-   - Password: `[strong_password]`
-5. **Add user to database** with ALL PRIVILEGES
-
-**Note the credentials:**
-- Database Name: `username_dekaplet_db` (usually prefixed with your username)
-- Database User: `username_dekaplet_user`
-- Database Password: `[your_password]`
-- Database Host: `localhost` (usually)
-
----
-
-## Step 3: Upload Files
-
-### Option A: Using File Manager (cPanel)
-
-#### Upload Backend:
-1. **Compress your backend folder:**
-   ```bash
-   cd /app
-   tar -czf backend.tar.gz backend/
-   ```
-
-2. **Upload to shared hosting:**
-   - Go to cPanel → File Manager
-   - Navigate to your domain root (usually `public_html`)
-   - Create folder: `api` (for backend)
-   - Upload `backend.tar.gz` to `api` folder
-   - Extract the archive
-
-3. **Move files:**
-   - Move everything from `api/backend/*` to `api/`
-   - Your structure should be: `public_html/api/app`, `public_html/api/routes`, etc.
-
-#### Upload Frontend:
-1. **Upload React build files:**
-   - Compress: `tar -czf build.tar.gz frontend/build/*`
-   - Upload to `public_html` root
-   - Extract
-
-2. **Move files:**
-   - Move contents of `build/*` to `public_html/` root
-   - You should have: `public_html/index.html`, `public_html/static`, etc.
-
-### Option B: Using FTP/SFTP (Recommended)
-
-Use FileZilla or similar:
-1. **Backend:** Upload `/app/backend/*` to `public_html/api/`
-2. **Frontend:** Upload `/app/frontend/build/*` to `public_html/`
-
-### Option C: Using Git (Best Method)
-
-If your hosting supports SSH:
-
-```bash
-# SSH into your server
-ssh username@yourserver.com
-
-# Clone your repository
-cd public_html
-git clone https://github.com/yourusername/dekaplet.git .
-
-# Install backend dependencies
-cd api
-composer install --optimize-autoloader --no-dev
-
-# Build frontend
-cd ../frontend
-npm install
-npm run build
-
-# Move frontend files
-mv build/* ../
-```
-
----
-
-## Step 4: Configure Laravel Backend
-
-### A. Create .env file in `public_html/api/`
-
-```bash
-# Copy from .env.example
-cp .env.example .env
-```
-
-### B. Edit .env file:
-
-```env
-APP_NAME=Dekaplet
-APP_ENV=production
-APP_KEY=
-APP_DEBUG=false
-APP_URL=https://yourdomain.com/api
-
-# Database Configuration
-DB_CONNECTION=mysql
-DB_HOST=localhost
-DB_PORT=3306
-DB_DATABASE=username_dekaplet_db
-DB_USERNAME=username_dekaplet_user
-DB_PASSWORD=your_database_password
-
-# Session & Cache (use file driver for shared hosting)
-SESSION_DRIVER=file
-CACHE_STORE=file
-QUEUE_CONNECTION=database
-
-# Sanctum
-SANCTUM_STATEFUL_DOMAINS=yourdomain.com,www.yourdomain.com
-
-# Mail (configure your email settings)
-MAIL_MAILER=smtp
-MAIL_HOST=smtp.yourdomain.com
-MAIL_PORT=587
-MAIL_USERNAME=noreply@yourdomain.com
-MAIL_PASSWORD=your_email_password
-MAIL_ENCRYPTION=tls
-```
-
-### C. Generate App Key:
-
-```bash
-cd public_html/api
-php artisan key:generate
-```
-
-### D. Run Migrations:
-
-```bash
-php artisan migrate --force
-php artisan db:seed --class=AdminUserSeeder
-```
-
-### E. Set Permissions:
-
-```bash
-chmod -R 755 storage bootstrap/cache
-chown -R username:username storage bootstrap/cache
-```
-
----
-
-## Step 5: Configure Web Server
-
-### A. Create .htaccess in `public_html/` (root)
-
-This handles React routing:
+1. Open your hosting's **File Manager** or use **FTP**
+2. Navigate to `public_html/`
+3. Upload all contents from the `build/` folder
+4. Create `.htaccess` in `public_html/`:
 
 ```apache
 <IfModule mod_rewrite.c>
     RewriteEngine On
     RewriteBase /
     
-    # Don't rewrite files or directories
+    # Handle React Router
     RewriteCond %{REQUEST_FILENAME} !-f
     RewriteCond %{REQUEST_FILENAME} !-d
-    
-    # Don't rewrite API requests
     RewriteCond %{REQUEST_URI} !^/api
+    RewriteRule . /index.html [L]
     
-    # Rewrite everything else to index.html
-    RewriteRule ^ index.html [L]
+    # Proxy API requests to Laravel
+    RewriteCond %{REQUEST_URI} ^/api
+    RewriteRule ^api/(.*)$ /api/public/index.php/$1 [L,QSA]
+</IfModule>
+
+# Enable CORS
+<IfModule mod_headers.c>
+    Header set Access-Control-Allow-Origin "*"
+    Header set Access-Control-Allow-Methods "GET, POST, PUT, DELETE, OPTIONS"
+    Header set Access-Control-Allow-Headers "Content-Type, Authorization"
+</IfModule>
+
+# Caching for static assets
+<IfModule mod_expires.c>
+    ExpiresActive On
+    ExpiresByType image/jpg "access plus 1 year"
+    ExpiresByType image/jpeg "access plus 1 year"
+    ExpiresByType image/png "access plus 1 year"
+    ExpiresByType image/gif "access plus 1 year"
+    ExpiresByType image/svg+xml "access plus 1 year"
+    ExpiresByType text/css "access plus 1 month"
+    ExpiresByType application/javascript "access plus 1 month"
 </IfModule>
 ```
 
-### B. Create .htaccess in `public_html/api/public/`
+---
 
-Laravel's default .htaccess:
+## Step 4: Upload Laravel Backend
+
+1. Create an `api/` folder in your hosting root (NOT in public_html)
+2. Upload the entire Laravel backend to `api/`
+3. Update `api/.env`:
+
+```env
+APP_NAME=Dekaplet
+APP_ENV=production
+APP_KEY=base64:YOUR_KEY_HERE
+APP_DEBUG=false
+APP_URL=https://your-domain.com/api
+
+DB_CONNECTION=mysql
+DB_HOST=localhost
+DB_PORT=3306
+DB_DATABASE=your_database_name
+DB_USERNAME=your_database_user
+DB_PASSWORD=your_database_password
+
+SANCTUM_STATEFUL_DOMAINS=your-domain.com
+SESSION_DOMAIN=.your-domain.com
+```
+
+4. Create `api/public/.htaccess`:
 
 ```apache
 <IfModule mod_rewrite.c>
@@ -243,218 +137,180 @@ Laravel's default .htaccess:
     RewriteCond %{HTTP:Authorization} .
     RewriteRule .* - [E=HTTP_AUTHORIZATION:%{HTTP:Authorization}]
 
-    # Redirect Trailing Slashes...
+    # Redirect Trailing Slashes
     RewriteCond %{REQUEST_FILENAME} !-d
     RewriteCond %{REQUEST_URI} (.+)/$
     RewriteRule ^ %1 [L,R=301]
 
-    # Send Requests To Front Controller...
+    # Send Requests To Front Controller
     RewriteCond %{REQUEST_FILENAME} !-d
     RewriteCond %{REQUEST_FILENAME} !-f
     RewriteRule ^ index.php [L]
 </IfModule>
 ```
 
-### C. Point API to Laravel's public directory
+---
 
-**Create symlink or subdomain:**
+## Step 5: Database Setup
 
-#### Method 1: Symlink (if allowed)
+1. Go to your hosting's **MySQL Databases** section
+2. Create a new database (e.g., `dekaplet_db`)
+3. Create a database user with all privileges
+4. Update `api/.env` with database credentials
+5. Import the database:
+
+**Option A: Via phpMyAdmin**
+- Export from development: `php artisan migrate:dump`
+- Import the SQL file via phpMyAdmin
+
+**Option B: Via SSH (if available)**
 ```bash
-cd public_html
-ln -s api/public api
-```
-
-#### Method 2: Subdomain (Recommended)
-1. In cPanel → Subdomains
-2. Create subdomain: `api.yourdomain.com`
-3. Point document root to: `public_html/api/public`
-
----
-
-## Step 6: Configure React Frontend
-
-### Update API URL
-
-Edit `public_html/env-config.js` (create if doesn't exist):
-
-```javascript
-window.ENV = {
-  REACT_APP_BACKEND_URL: 'https://api.yourdomain.com'
-  // OR if using path: 'https://yourdomain.com/api'
-};
-```
-
-### Update index.html
-
-Add this script tag before other scripts:
-
-```html
-<script src="/env-config.js"></script>
-```
-
-### Update React to use runtime config
-
-Edit your frontend code to use:
-```javascript
-const BACKEND_URL = window.ENV?.REACT_APP_BACKEND_URL || process.env.REACT_APP_BACKEND_URL;
+cd /home/username/api
+php artisan migrate --force
+php artisan db:seed --class=AdminUserSeeder --force
 ```
 
 ---
 
-## Step 7: Final Checks
+## Step 6: Set Permissions
 
-### Test Backend API:
+Via FTP or SSH, set these permissions:
+
 ```bash
-curl https://api.yourdomain.com/api/health
+# Storage and cache directories
+chmod -R 775 api/storage
+chmod -R 775 api/bootstrap/cache
+
+# If using SSH
+cd /home/username/api
+php artisan storage:link
+php artisan config:cache
+php artisan route:cache
+php artisan view:cache
 ```
-
-Should return:
-```json
-{"status":"healthy","timestamp":"...","service":"Dekaplet API"}
-```
-
-### Test Frontend:
-Visit `https://yourdomain.com` - should load the Dekaplet homepage
-
-### Test Login:
-1. Go to `https://yourdomain.com/login`
-2. Login with: `admin@dekaplet.com` / `admin123`
-3. Should redirect to dashboard
 
 ---
 
-## Common Issues & Solutions
+## Step 7: Update Frontend Environment
 
-### Issue 1: 500 Internal Server Error
+Before building, update `frontend/.env.production`:
 
-**Solution:**
+```env
+REACT_APP_BACKEND_URL=https://your-domain.com
+```
+
+Then rebuild:
 ```bash
-# Check Laravel logs
-cat storage/logs/laravel.log
-
-# Set permissions
-chmod -R 755 storage bootstrap/cache
-
-# Clear cache
-php artisan cache:clear
-php artisan config:clear
+yarn build
 ```
 
-### Issue 2: "Mix" or build files not found
+---
 
-**Solution:**
-- Ensure all files from `frontend/build/*` are in `public_html/`
-- Check that `static/` folder exists
-- Verify `index.html` is in root
+## Step 8: Configure cPanel/Plesk (if applicable)
 
-### Issue 3: API requests fail with CORS error
+### For cPanel:
+1. Go to "Software" → "Select PHP Version"
+2. Choose PHP 8.2+
+3. Enable extensions: `pdo_mysql`, `mbstring`, `xml`, `json`, `tokenizer`
 
-**Solution:**
-Update `api/app/Http/Middleware/Cors.php`:
-```php
-->header('Access-Control-Allow-Origin', 'https://yourdomain.com')
+### For Plesk:
+1. Go to "PHP Settings"
+2. Select PHP 8.2+
+3. Enable required extensions
+
+---
+
+## Step 9: SSL Certificate
+
+1. Install SSL certificate via hosting panel
+2. Enable "Force HTTPS" redirect
+3. Update all URLs in `.env` to use `https://`
+
+---
+
+## Troubleshooting
+
+### 404 Errors on React Routes
+- Ensure `.htaccess` is properly configured
+- Check if `mod_rewrite` is enabled
+
+### API Connection Errors
+- Verify `REACT_APP_BACKEND_URL` is correct
+- Check CORS headers in Laravel
+- Test API directly: `https://your-domain.com/api/health`
+
+### Database Connection Issues
+- Verify credentials in `.env`
+- Check if database user has proper permissions
+- Try `127.0.0.1` instead of `localhost`
+
+### Storage Permission Issues
+```bash
+chmod -R 775 storage
+chmod -R 775 bootstrap/cache
 ```
 
-### Issue 4: Database connection failed
-
-**Solution:**
-- Verify database credentials in `.env`
-- Check if database exists in cPanel
-- Ensure user has ALL PRIVILEGES
-- Try changing `DB_HOST` to `127.0.0.1` instead of `localhost`
-
-### Issue 5: Routes not working
-
-**Solution:**
-- Enable `mod_rewrite` in `.htaccess`
-- Check if `.htaccess` files are uploaded
-- Contact hosting support to enable mod_rewrite
+### Composer Dependencies (if SSH available)
+```bash
+cd api
+composer install --no-dev --optimize-autoloader
+```
 
 ---
 
-## Security Considerations for Production
+## Files Required for Upload
 
-1. **Change default credentials:**
-   ```bash
-   php artisan tinker
-   $admin = User::where('email', 'admin@dekaplet.com')->first();
-   $admin->password = Hash::make('your_new_secure_password');
-   $admin->save();
-   ```
+### Frontend (to public_html/)
+```
+build/
+├── index.html
+├── favicon.ico
+├── manifest.json
+├── robots.txt
+├── static/
+│   ├── css/
+│   ├── js/
+│   └── media/
+└── .htaccess (create manually)
+```
 
-2. **Enable HTTPS:**
-   - Get SSL certificate from cPanel (Let's Encrypt free)
-   - Force HTTPS in `.htaccess`
-
-3. **Disable debug mode:**
-   ```env
-   APP_DEBUG=false
-   ```
-
-4. **Protect sensitive files:**
-   - `.env` should NOT be web-accessible
-   - Only Laravel's `public/` folder should be exposed
-
-5. **Set up backups:**
-   - Database: Use cPanel backup or cron job
-   - Files: Regular backups of `storage/` and database
-
----
-
-## Alternative: Docker on Shared Hosting
-
-Some modern shared hosts support Docker. If available, you can:
-1. Use the existing Docker setup
-2. Deploy containers
-3. Much easier than manual setup
+### Backend (to api/)
+```
+backend/
+├── app/
+├── bootstrap/
+├── config/
+├── database/
+├── public/
+├── resources/
+├── routes/
+├── storage/
+├── vendor/
+├── .env
+├── artisan
+└── composer.json
+```
 
 ---
 
-## Recommended Hosting Providers
+## Quick Checklist
 
-For a fintech application like Dekaplet, consider:
-
-**VPS/Cloud (Recommended):**
-- DigitalOcean ($6-12/month)
-- Linode ($5-10/month)
-- Vultr ($6-12/month)
-- AWS Lightsail ($5-10/month)
-
-**Shared Hosting (Budget option):**
-- SiteGround (PHP 8.2, SSH access)
-- A2 Hosting (Fast, good support)
-- Hostinger (Affordable)
-
----
-
-## Need Help?
-
-If you encounter issues:
-1. Check `storage/logs/laravel.log` for backend errors
-2. Check browser console for frontend errors
-3. Contact your hosting support for server configuration
-4. Consider upgrading to VPS for better control
-
----
-
-## Post-Deployment Checklist
-
-- [ ] Backend API health check works
-- [ ] Frontend loads correctly
-- [ ] Login/registration works
-- [ ] User dashboard loads
-- [ ] Admin dashboard loads
-- [ ] Database migrations completed
+- [ ] Frontend built locally (`yarn build`)
+- [ ] Frontend files uploaded to `public_html/`
+- [ ] `.htaccess` created for React routing
+- [ ] Laravel backend uploaded to `api/`
+- [ ] Database created and configured
+- [ ] `.env` updated with production settings
+- [ ] Storage permissions set (775)
 - [ ] SSL certificate installed
-- [ ] Email sending configured
-- [ ] Backups scheduled
-- [ ] Error logging configured
-- [ ] Security hardening complete
+- [ ] Admin user seeded
+- [ ] Test login and dashboard
 
 ---
 
-**Your application should now be live at https://yourdomain.com!**
+## Support
 
-For the admin panel: https://yourdomain.com/admin
-Login: admin@dekaplet.com / admin123 (change this immediately!)
+For deployment issues, check:
+1. Laravel logs: `api/storage/logs/laravel.log`
+2. PHP error logs in hosting panel
+3. Browser console for frontend errors
