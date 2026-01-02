@@ -43,8 +43,14 @@ const ProtectedRoute = ({ children }) => {
   
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-black">
-        <div className="text-[var(--brand-primary)] text-xl">Loading...</div>
+      <div className="min-h-screen flex items-center justify-center" style={{ background: 'var(--bg-primary)' }}>
+        <div className="text-center">
+          <div 
+            className="w-12 h-12 rounded-xl mx-auto mb-4 animate-pulse"
+            style={{ background: 'var(--brand-gradient)' }}
+          />
+          <div style={{ color: 'var(--text-muted)' }}>Loading...</div>
+        </div>
       </div>
     );
   }
