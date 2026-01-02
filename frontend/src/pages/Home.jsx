@@ -1,216 +1,419 @@
-import React, { Suspense, lazy } from 'react';
-import { ArrowRight, Shield, Zap, Globe, Lock, TrendingUp, Users } from 'lucide-react';
+import React from 'react';
 import { Link } from 'react-router-dom';
-
-const Spline = lazy(() => import('@splinetool/react-spline'));
+import Spline from '@splinetool/react-spline';
+import { 
+  ArrowRight, 
+  Shield, 
+  Zap, 
+  Globe, 
+  Wallet,
+  ArrowUpRight,
+  CheckCircle,
+  TrendingUp,
+  Users,
+  Lock
+} from 'lucide-react';
 
 const Home = () => {
+  const stats = [
+    { value: '99.9%', label: 'Uptime', icon: Zap },
+    { value: '$50M+', label: 'Processed', icon: TrendingUp },
+    { value: '500+', label: 'Merchants', icon: Users },
+    { value: '50+', label: 'Countries', icon: Globe },
+  ];
+
+  const features = [
+    {
+      icon: Wallet,
+      title: 'Multi-Currency Wallets',
+      description: 'Support for Bitcoin, Ethereum, USDT, and more. Manage all your crypto in one place.',
+    },
+    {
+      icon: Shield,
+      title: 'Enterprise Security',
+      description: 'Bank-grade security with multi-sig wallets, 2FA, and cold storage solutions.',
+    },
+    {
+      icon: Zap,
+      title: 'Instant Settlements',
+      description: 'Real-time transaction processing with instant confirmations and settlements.',
+    },
+    {
+      icon: Globe,
+      title: 'Global Reach',
+      description: 'Accept payments from anywhere in the world with localized support.',
+    },
+  ];
+
+  const testimonials = [
+    {
+      quote: "Dekaplet transformed how we handle crypto payments. The integration was seamless.",
+      author: "Sarah Chen",
+      role: "CTO, TechFlow",
+      avatar: "S"
+    },
+    {
+      quote: "Best-in-class security and support. Our customers love the payment experience.",
+      author: "Michael Ross",
+      role: "Founder, PayScale",
+      avatar: "M"
+    },
+    {
+      quote: "Finally, a crypto payment solution that actually works for enterprise needs.",
+      author: "Emily Zhang",
+      role: "CFO, BlockVentures",
+      avatar: "E"
+    }
+  ];
+
   return (
-    <div className="dark-container">
-      {/* Hero Section with Spline */}
-      <section className="section-padding min-h-screen flex items-center">
-        <div className="max-w-7xl mx-auto w-full">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+    <div style={{ background: 'var(--bg-primary)' }}>
+      {/* Hero Section */}
+      <section className="relative min-h-screen flex items-center pt-20 overflow-hidden">
+        {/* Background Gradient */}
+        <div 
+          className="absolute inset-0 opacity-30"
+          style={{
+            background: 'radial-gradient(circle at 30% 50%, rgba(0, 212, 170, 0.15) 0%, transparent 50%), radial-gradient(circle at 70% 50%, rgba(14, 165, 233, 0.15) 0%, transparent 50%)'
+          }}
+        />
+        
+        <div className="container mx-auto px-4 lg:px-8 relative z-10">
+          <div className="grid lg:grid-cols-2 gap-12 items-center">
             {/* Left Content */}
-            <div className="space-y-8">
-              <h1 className="display-huge">
-                Powering Crypto Payments and Wallets
-              </h1>
-              <p className="body-large text-[var(--text-secondary)]">
-                Accept, store, and settle cryptocurrency seamlessly. Enterprise-grade infrastructure for the future of payments.
-              </p>
-              <div className="flex flex-wrap gap-4">
-                <Link to="/contact">
-                  <button className="btn-primary">
-                    Get Started
-                    <ArrowRight size={20} />
-                  </button>
-                </Link>
-                <Link to="/developers">
-                  <button className="btn-secondary">
-                    View Documentation
-                  </button>
-                </Link>
+            <div className="animate-slide-up">
+              <div 
+                className="inline-flex items-center gap-2 px-4 py-2 rounded-full mb-6"
+                style={{ background: 'var(--bg-secondary)', border: '1px solid var(--border-primary)' }}
+              >
+                <span className="w-2 h-2 rounded-full bg-green-500 animate-pulse" />
+                <span className="text-sm font-medium" style={{ color: 'var(--text-secondary)' }}>
+                  Now supporting 50+ cryptocurrencies
+                </span>
               </div>
               
+              <h1 
+                className="text-4xl sm:text-5xl lg:text-6xl font-bold mb-6 leading-tight"
+                style={{ color: 'var(--text-primary)' }}
+              >
+                The Future of{' '}
+                <span className="text-gradient">Crypto Payments</span>
+                {' '}is Here
+              </h1>
+              
+              <p 
+                className="text-lg mb-8 max-w-lg"
+                style={{ color: 'var(--text-secondary)' }}
+              >
+                Accept, store, and settle cryptocurrency seamlessly. 
+                Enterprise-grade infrastructure for the future of payments.
+              </p>
+
+              <div className="flex flex-col sm:flex-row gap-4 mb-12">
+                <Link
+                  to="/register"
+                  className="inline-flex items-center justify-center gap-2 px-8 py-4 rounded-xl font-semibold transition-all duration-300 hover:scale-105"
+                  style={{ 
+                    background: 'var(--brand-gradient)', 
+                    color: 'white',
+                    boxShadow: '0 4px 20px rgba(0, 212, 170, 0.3)'
+                  }}
+                >
+                  Get Started Free
+                  <ArrowRight size={20} />
+                </Link>
+                <Link
+                  to="/developers"
+                  className="inline-flex items-center justify-center gap-2 px-8 py-4 rounded-xl font-semibold transition-all duration-200"
+                  style={{ 
+                    background: 'var(--bg-secondary)', 
+                    color: 'var(--text-primary)',
+                    border: '1px solid var(--border-primary)'
+                  }}
+                >
+                  View Documentation
+                  <ArrowUpRight size={18} />
+                </Link>
+              </div>
+
               {/* Stats */}
-              <div className="grid grid-cols-3 gap-8 pt-8">
-                <div>
-                  <div className="text-3xl font-bold text-[var(--brand-primary)]">99.9%</div>
-                  <div className="text-sm text-[var(--text-muted)] mt-1">Uptime</div>
-                </div>
-                <div>
-                  <div className="text-3xl font-bold text-[var(--brand-primary)]">$50M+</div>
-                  <div className="text-sm text-[var(--text-muted)] mt-1">Processed</div>
-                </div>
-                <div>
-                  <div className="text-3xl font-bold text-[var(--brand-primary)]">500+</div>
-                  <div className="text-sm text-[var(--text-muted)] mt-1">Merchants</div>
-                </div>
+              <div className="grid grid-cols-2 sm:grid-cols-4 gap-6">
+                {stats.map((stat, index) => {
+                  const Icon = stat.icon;
+                  return (
+                    <div key={index} className="text-center sm:text-left">
+                      <div 
+                        className="text-2xl sm:text-3xl font-bold mb-1"
+                        style={{ color: 'var(--brand-primary)' }}
+                      >
+                        {stat.value}
+                      </div>
+                      <div 
+                        className="text-sm flex items-center gap-1 justify-center sm:justify-start"
+                        style={{ color: 'var(--text-muted)' }}
+                      >
+                        <Icon size={14} />
+                        {stat.label}
+                      </div>
+                    </div>
+                  );
+                })}
               </div>
             </div>
 
-            {/* Right - Spline 3D Animation */}
-            <div className="relative h-[700px] w-full">
-              <Suspense fallback={
-                <div className="flex items-center justify-center h-full">
-                  <div className="animate-pulse text-[var(--brand-primary)]">Loading 3D...</div>
-                </div>
-              }>
-                <Spline 
-                  scene="https://prod.spline.design/NbVmy6DPLhY-5Lvg/scene.splinecode"
-                  style={{ width: '100%', height: '100%', overflow: 'visible' }}
-                />
-              </Suspense>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Value Proposition */}
-      <section className="section-padding bg-[var(--bg-secondary)]">
-        <div className="max-w-7xl mx-auto">
-          <div className="text-center mb-16">
-            <h2 className="display-medium mb-6">Why Choose Dekaplet?</h2>
-            <p className="body-large text-[var(--text-secondary)] max-w-3xl mx-auto">
-              Built for merchants, developers, and enterprises who demand reliability, security, and scale.
-            </p>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            <div className="bg-black p-8 border border-[var(--border-subtle)] dark-hover dark-transition">
-              <Shield className="text-[var(--brand-primary)] mb-4" size={40} />
-              <h3 className="heading-2 mb-4">Bank-Grade Security</h3>
-              <p className="body-medium text-[var(--text-secondary)]">
-                Multi-signature wallets, cold storage, and enterprise-grade encryption protect your assets.
-              </p>
-            </div>
-
-            <div className="bg-black p-8 border border-[var(--border-subtle)] dark-hover dark-transition">
-              <Zap className="text-[var(--brand-primary)] mb-4" size={40} />
-              <h3 className="heading-2 mb-4">Instant Settlements</h3>
-              <p className="body-medium text-[var(--text-secondary)]">
-                Real-time transaction tracking with automated settlement to your local bank account.
-              </p>
-            </div>
-
-            <div className="bg-black p-8 border border-[var(--border-subtle)] dark-hover dark-transition">
-              <Globe className="text-[var(--brand-primary)] mb-4" size={40} />
-              <h3 className="heading-2 mb-4">Multi-Chain Support</h3>
-              <p className="body-medium text-[var(--text-secondary)]">
-                Accept BTC, ETH, TRON, USDT, BUSD and more. One integration, all blockchains.
-              </p>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* How It Works - Simple */}
-      <section className="section-padding">
-        <div className="max-w-7xl mx-auto">
-          <div className="text-center mb-16">
-            <h2 className="display-medium mb-6">Simple Integration, Powerful Results</h2>
-            <p className="body-large text-[var(--text-secondary)] max-w-3xl mx-auto">
-              Get started in minutes with our developer-friendly APIs
-            </p>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
-            <div className="text-center">
-              <div className="w-16 h-16 rounded-full bg-[var(--brand-primary)] text-black flex items-center justify-center text-2xl font-bold mx-auto mb-4">
-                1
-              </div>
-              <h3 className="heading-3 mb-3">Sign Up</h3>
-              <p className="body-small text-[var(--text-secondary)]">
-                Create your account and complete KYC verification
-              </p>
-            </div>
-
-            <div className="text-center">
-              <div className="w-16 h-16 rounded-full bg-[var(--brand-primary)] text-black flex items-center justify-center text-2xl font-bold mx-auto mb-4">
-                2
-              </div>
-              <h3 className="heading-3 mb-3">Integrate API</h3>
-              <p className="body-small text-[var(--text-secondary)]">
-                Add our payment gateway to your platform
-              </p>
-            </div>
-
-            <div className="text-center">
-              <div className="w-16 h-16 rounded-full bg-[var(--brand-primary)] text-black flex items-center justify-center text-2xl font-bold mx-auto mb-4">
-                3
-              </div>
-              <h3 className="heading-3 mb-3">Accept Payments</h3>
-              <p className="body-small text-[var(--text-secondary)]">
-                Start accepting crypto from customers worldwide
-              </p>
-            </div>
-
-            <div className="text-center">
-              <div className="w-16 h-16 rounded-full bg-[var(--brand-primary)] text-black flex items-center justify-center text-2xl font-bold mx-auto mb-4">
-                4
-              </div>
-              <h3 className="heading-3 mb-3">Withdraw Funds</h3>
-              <p className="body-small text-[var(--text-secondary)]">
-                Convert to fiat and transfer to your bank
-              </p>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Features Grid with Images */}
-      <section className="section-padding bg-[var(--bg-secondary)]">
-        <div className="max-w-7xl mx-auto">
-          <div className="text-center mb-16">
-            <h2 className="display-medium mb-6">Built for Scale</h2>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
-            <div className="flex items-center">
-              <img 
-                src="https://images.unsplash.com/photo-1640161704729-cbe966a08476" 
-                alt="Cryptocurrency" 
-                className="w-full h-[400px] object-cover"
+            {/* Right - 3D Animation */}
+            <div className="relative h-[400px] lg:h-[600px] hidden lg:block">
+              <Spline 
+                scene="https://prod.spline.design/6Wq1Q7YGyM-iab9i/scene.splinecode"
+                className="w-full h-full"
               />
             </div>
-            <div className="flex flex-col justify-center space-y-6">
-              <Lock className="text-[var(--brand-primary)]" size={48} />
-              <h3 className="display-medium">Secure Multi-Chain Wallets</h3>
-              <p className="body-large text-[var(--text-secondary)]">
-                Store crypto securely until you're ready to withdraw. Multi-signature protection, cold storage, and real-time monitoring keep your assets safe.
+          </div>
+        </div>
+      </section>
+
+      {/* Features Section */}
+      <section className="py-20 lg:py-32" style={{ background: 'var(--bg-secondary)' }}>
+        <div className="container mx-auto px-4 lg:px-8">
+          <div className="text-center max-w-2xl mx-auto mb-16">
+            <h2 
+              className="text-3xl sm:text-4xl font-bold mb-4"
+              style={{ color: 'var(--text-primary)' }}
+            >
+              Everything You Need to Accept Crypto
+            </h2>
+            <p style={{ color: 'var(--text-secondary)' }}>
+              Powerful features designed for modern businesses. From startups to enterprises.
+            </p>
+          </div>
+
+          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+            {features.map((feature, index) => {
+              const Icon = feature.icon;
+              return (
+                <div
+                  key={index}
+                  className="group p-6 rounded-2xl transition-all duration-300 hover:-translate-y-1"
+                  style={{ 
+                    background: 'var(--bg-card)',
+                    border: '1px solid var(--border-primary)',
+                    boxShadow: 'var(--shadow-sm)'
+                  }}
+                >
+                  <div 
+                    className="w-12 h-12 rounded-xl flex items-center justify-center mb-4 transition-transform duration-300 group-hover:scale-110"
+                    style={{ background: 'var(--brand-gradient)' }}
+                  >
+                    <Icon size={24} className="text-white" />
+                  </div>
+                  <h3 
+                    className="text-lg font-semibold mb-2"
+                    style={{ color: 'var(--text-primary)' }}
+                  >
+                    {feature.title}
+                  </h3>
+                  <p 
+                    className="text-sm"
+                    style={{ color: 'var(--text-secondary)' }}
+                  >
+                    {feature.description}
+                  </p>
+                </div>
+              );
+            })}
+          </div>
+        </div>
+      </section>
+
+      {/* How It Works */}
+      <section className="py-20 lg:py-32">
+        <div className="container mx-auto px-4 lg:px-8">
+          <div className="grid lg:grid-cols-2 gap-16 items-center">
+            <div>
+              <h2 
+                className="text-3xl sm:text-4xl font-bold mb-6"
+                style={{ color: 'var(--text-primary)' }}
+              >
+                Start Accepting Crypto in Minutes
+              </h2>
+              <p 
+                className="mb-8"
+                style={{ color: 'var(--text-secondary)' }}
+              >
+                Our simple integration process gets you up and running fast. 
+                No complex setup required.
               </p>
-              <Link to="/features">
-                <button className="btn-primary w-fit">
-                  Learn More
-                  <ArrowRight size={20} />
-                </button>
-              </Link>
+
+              <div className="space-y-6">
+                {[
+                  { step: '01', title: 'Create Account', desc: 'Sign up and verify your business in minutes' },
+                  { step: '02', title: 'Integrate API', desc: 'Add our SDK or use pre-built plugins' },
+                  { step: '03', title: 'Start Accepting', desc: 'Receive payments in any cryptocurrency' },
+                ].map((item, index) => (
+                  <div 
+                    key={index}
+                    className="flex items-start gap-4 p-4 rounded-xl transition-all duration-200"
+                    style={{ background: 'var(--bg-secondary)' }}
+                  >
+                    <div 
+                      className="w-10 h-10 rounded-lg flex items-center justify-center font-bold text-sm"
+                      style={{ background: 'var(--brand-gradient)', color: 'white' }}
+                    >
+                      {item.step}
+                    </div>
+                    <div>
+                      <h4 
+                        className="font-semibold mb-1"
+                        style={{ color: 'var(--text-primary)' }}
+                      >
+                        {item.title}
+                      </h4>
+                      <p 
+                        className="text-sm"
+                        style={{ color: 'var(--text-muted)' }}
+                      >
+                        {item.desc}
+                      </p>
+                    </div>
+                  </div>
+                ))}
+              </div>
             </div>
+
+            <div 
+              className="p-8 rounded-3xl"
+              style={{ 
+                background: 'var(--bg-secondary)',
+                border: '1px solid var(--border-primary)'
+              }}
+            >
+              <div className="space-y-4">
+                {[
+                  { label: 'API Integration', value: '5 min' },
+                  { label: 'First Transaction', value: 'Instant' },
+                  { label: 'Settlement Time', value: '< 1 min' },
+                  { label: 'Support Response', value: '< 2 hrs' },
+                ].map((item, index) => (
+                  <div 
+                    key={index}
+                    className="flex items-center justify-between p-4 rounded-xl"
+                    style={{ background: 'var(--bg-card)' }}
+                  >
+                    <span style={{ color: 'var(--text-secondary)' }}>{item.label}</span>
+                    <span 
+                      className="font-semibold"
+                      style={{ color: 'var(--brand-primary)' }}
+                    >
+                      {item.value}
+                    </span>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Testimonials */}
+      <section className="py-20 lg:py-32" style={{ background: 'var(--bg-secondary)' }}>
+        <div className="container mx-auto px-4 lg:px-8">
+          <div className="text-center max-w-2xl mx-auto mb-16">
+            <h2 
+              className="text-3xl sm:text-4xl font-bold mb-4"
+              style={{ color: 'var(--text-primary)' }}
+            >
+              Trusted by Industry Leaders
+            </h2>
+            <p style={{ color: 'var(--text-secondary)' }}>
+              See what our customers have to say about their experience.
+            </p>
+          </div>
+
+          <div className="grid md:grid-cols-3 gap-6">
+            {testimonials.map((testimonial, index) => (
+              <div
+                key={index}
+                className="p-6 rounded-2xl"
+                style={{ 
+                  background: 'var(--bg-card)',
+                  border: '1px solid var(--border-primary)'
+                }}
+              >
+                <p 
+                  className="mb-6 text-lg"
+                  style={{ color: 'var(--text-primary)' }}
+                >
+                  "{testimonial.quote}"
+                </p>
+                <div className="flex items-center gap-3">
+                  <div 
+                    className="w-10 h-10 rounded-full flex items-center justify-center font-bold"
+                    style={{ background: 'var(--brand-gradient)', color: 'white' }}
+                  >
+                    {testimonial.avatar}
+                  </div>
+                  <div>
+                    <div 
+                      className="font-semibold"
+                      style={{ color: 'var(--text-primary)' }}
+                    >
+                      {testimonial.author}
+                    </div>
+                    <div 
+                      className="text-sm"
+                      style={{ color: 'var(--text-muted)' }}
+                    >
+                      {testimonial.role}
+                    </div>
+                  </div>
+                </div>
+              </div>
+            ))}
           </div>
         </div>
       </section>
 
       {/* CTA Section */}
-      <section className="section-padding">
-        <div className="max-w-5xl mx-auto text-center">
-          <div className="bg-[var(--bg-secondary)] border border-[var(--border-subtle)] p-16">
-            <h2 className="display-medium mb-6">Ready to Transform Your Payments?</h2>
-            <p className="body-large text-[var(--text-secondary)] mb-8 max-w-2xl mx-auto">
-              Join hundreds of merchants already using Dekaplet to accept crypto payments.
-            </p>
-            <div className="flex flex-wrap gap-4 justify-center">
-              <Link to="/contact">
-                <button className="btn-primary">
-                  Get Started Now
+      <section className="py-20 lg:py-32">
+        <div className="container mx-auto px-4 lg:px-8">
+          <div 
+            className="relative overflow-hidden rounded-3xl p-8 lg:p-16 text-center"
+            style={{ background: 'var(--brand-gradient)' }}
+          >
+            <div className="relative z-10">
+              <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-white mb-4">
+                Ready to Get Started?
+              </h2>
+              <p className="text-white/80 mb-8 max-w-xl mx-auto">
+                Join thousands of businesses already using Dekaplet to accept crypto payments.
+              </p>
+              <div className="flex flex-col sm:flex-row gap-4 justify-center">
+                <Link
+                  to="/register"
+                  className="inline-flex items-center justify-center gap-2 px-8 py-4 rounded-xl font-semibold transition-all duration-200 hover:scale-105"
+                  style={{ background: 'white', color: 'var(--brand-primary)' }}
+                >
+                  Create Free Account
                   <ArrowRight size={20} />
-                </button>
-              </Link>
-              <Link to="/developers">
-                <button className="btn-secondary">
-                  View API Docs
-                </button>
-              </Link>
+                </Link>
+                <Link
+                  to="/contact"
+                  className="inline-flex items-center justify-center gap-2 px-8 py-4 rounded-xl font-semibold transition-all duration-200"
+                  style={{ 
+                    background: 'rgba(255,255,255,0.2)', 
+                    color: 'white',
+                    border: '1px solid rgba(255,255,255,0.3)'
+                  }}
+                >
+                  Contact Sales
+                </Link>
+              </div>
+            </div>
+            
+            {/* Background Pattern */}
+            <div className="absolute inset-0 opacity-10">
+              <div className="absolute top-0 left-0 w-64 h-64 rounded-full bg-white transform -translate-x-1/2 -translate-y-1/2" />
+              <div className="absolute bottom-0 right-0 w-96 h-96 rounded-full bg-white transform translate-x-1/3 translate-y-1/3" />
             </div>
           </div>
         </div>
